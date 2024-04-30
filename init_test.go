@@ -2,6 +2,7 @@ package di
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -136,5 +137,5 @@ func Test_user_panic_in_init_not_recovered(t *testing.T) {
 		_ = c.Init()
 	}()
 
-	require.Equal(t, panic, "some panic")
+	require.True(t, strings.HasPrefix(panic, "some panic"))
 }

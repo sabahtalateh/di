@@ -91,10 +91,7 @@ func Setup[T any](c *Container, opts ...setupOpt[T]) error {
 		}
 
 		if _, ok := c.components[coord]; ok {
-			if coord.name == "" {
-				coord.name = "(Unnamed)"
-			}
-			return fmt.Errorf("%w (%s, %s)", ErrComponentSet, coord.type_, coord.name)
+			return fmt.Errorf("%w (%s, %s)", ErrComponentSet, coord.type_, coord.prettyName())
 		}
 
 		c.components[coord] = component{

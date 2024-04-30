@@ -15,6 +15,13 @@ type coordinate struct {
 	name  string
 }
 
+func (c *coordinate) prettyName() string {
+	if c.name == "" {
+		return "(Unnamed)"
+	}
+	return c.name
+}
+
 type component struct {
 	// initFn also used to indicate if component initialized
 	// if initFn is not nil component not initialized yet

@@ -1,9 +1,14 @@
 package di
 
+import (
+	"fmt"
+	"runtime/debug"
+)
+
 func (c *Container) initComponent(coord coordinate) (any, error) {
 	comp, ok := c.components[coord]
 	if !ok {
-		return nil, ErrNotFound
+		return nil, fmt.Errorf("%w (%s, %s)", ErrNotFound, coord.type_, coord.prettyName())
 	}
 
 	if comp.initFn == nil {
@@ -55,7 +60,7 @@ func Init[T any](f func(*Container) T) withInit[T]            { return f }
 func (c *Container) Init() (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = toError(r)
+			err = fmt.Errorf("%w: %s", toError(r), debug.Stack())
 			if !recoverable(err) {
 				panic(err)
 			}

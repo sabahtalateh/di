@@ -64,7 +64,7 @@ func GetE[T any](c *Container, opts ...getOpt[T]) (T, error) {
 
 	val, err := c.initComponent(coord)
 	if errors.Is(err, ErrNotFound) {
-		return t, notFoundHint[T](c, coord.name)
+		return t, notFoundHint[T](err, c, coord.name)
 	}
 	if err != nil {
 		return t, err
@@ -78,7 +78,7 @@ func GetE[T any](c *Container, opts ...getOpt[T]) (T, error) {
 	return t, nil
 }
 
-func notFoundHint[T any](c *Container, name string) error {
+func notFoundHint[T any](err error, c *Container, name string) error {
 	tryCoord := coordinate{name: name}
 
 	var t T
@@ -92,12 +92,8 @@ func notFoundHint[T any](c *Container, name string) error {
 	}
 
 	if _, ok := c.components[tryCoord]; ok {
-		name := tryCoord.name
-		if name == "" {
-			name = "(Unnamed)"
-		}
-		return fmt.Errorf("%w: found component (%s, %s)", ErrNotFound, tryCoord.type_, name)
+		return fmt.Errorf("%w: found component (%s, %s)", err, tryCoord.type_, tryCoord.prettyName())
 	}
 
-	return ErrNotFound
+	return err
 }
