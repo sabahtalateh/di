@@ -237,3 +237,23 @@ func Test_get_err_hint_2(t *testing.T) {
 	require.Error(t, err, ErrNotFound)
 	require.True(t, strings.Contains(err.Error(), "found component (di.getTestType, (Unnamed))"))
 }
+
+func Test_get_stack_trace(t *testing.T) {
+	type getTestType2 struct {
+		gtt *getTestType
+	}
+
+	c := NewContainer()
+	err := Setup[*getTestType2](c,
+		Init(func(c *Container) *getTestType2 {
+			return &getTestType2{
+				gtt: Get[*getTestType](c),
+			}
+		}),
+	)
+	require.NoError(t, err)
+
+	err = c.Init()
+	// test err contains stack trace with file path
+	require.Contains(t, err.Error(), "github.com/sabahtalateh/di/get_test.go:")
+}

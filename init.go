@@ -8,7 +8,7 @@ import (
 func (c *Container) initComponent(coord coordinate) (any, error) {
 	comp, ok := c.components[coord]
 	if !ok {
-		return nil, fmt.Errorf("%w (%s, %s)", ErrNotFound, coord.type_, coord.prettyName())
+		return nil, fmt.Errorf("%w: (%s, %s)", ErrNotFound, coord.type_, coord.prettyName())
 	}
 
 	if comp.initFn == nil {
