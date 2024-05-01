@@ -16,7 +16,7 @@ Use `di.Setup` function to setup component
 
 ```go
 c := di.NewContainer()
-di.Setup[*SomeType](c, 
+err := di.Setup[*SomeType](c, 
     // ..
 )
 ```
@@ -27,7 +27,7 @@ Define function to initialize component. Usualy call `NewSomeType` here. To call
 
 c := di.NewContainer()
 
-di.Setup[*SomeType](c,
+err := di.Setup[*SomeType](c,
     // ..
     di.Init(func(*Container) *SomeType) {
         return NewSomeType()
@@ -47,7 +47,7 @@ func NewSomeType() (*SomeType, error) {
     // ..
 }
 
-di.Setup[*SomeType](c,
+err := di.Setup[*SomeType](c,
     // ..
     di.InitE(func(*Container) (*SomeType, error)) {
         return NewSomeType()
@@ -58,7 +58,7 @@ di.Setup[*SomeType](c,
 #### Setup Name
 Define component name. Name may be used with `di.Get/di.GetE`
 ```go
-di.Setup[*SomeType](c,
+err := di.Setup[*SomeType](c,
     di.Name("SomeName"),
     // ..
 )
@@ -69,7 +69,7 @@ Define function that will be executed when component executing some stage. Can b
 ```go
 c := NewContainer()
 
-di.Setup[*SomeType](c,
+err := di.Setup[*SomeType](c,
     // ..
     di.Stage("start", func(ctx context.Context, db *DB) error {
         return db.Open(ctx)
@@ -86,4 +86,31 @@ err := c.ExecStage("stop", ctx)
 ```
 
 #### Get component from container
-Component can be retrieved from container during initializing 
+Component can be retrieved from container during initialization or after it. To get component during initialization use `di.Get`, if panic occures while initialization it will be captured within `Init` function
+
+```go
+
+c := NewContainer()
+
+err := di.Setup[*SomeType](c,
+    // ..
+    di.InitE(func(c *Container) (*SomeType, error)) {
+        return NewSomeType(
+            di.Get[config.AppConfig](c),
+            di.Get[*SomeOtherType](c, di.Name("SomeOtherType")),
+        )
+    }
+)
+// ..
+
+err = c.Init()
+// ..
+
+err = c.Stage("start", ctx)
+// ..
+
+someService, err := di.GetE[*SomeType](c)
+// ..
+someService.DoWork()
+
+```
