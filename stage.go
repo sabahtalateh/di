@@ -22,7 +22,11 @@ func stageFn[T any](c *Container, coord coordinate, fn func(context.Context, T) 
 			return nil
 		}
 
-		return fn(ctx, t)
+		err := fn(ctx, t)
+		if err != nil {
+			err = fmt.Errorf("%w: %s", err, debug.Stack())
+		}
+		return err
 	}
 }
 
@@ -57,7 +61,7 @@ func (c *Container) ExecStage(ctx context.Context, name string) error {
 		fn := stageFn
 		eg.Go(func() (err error) {
 			if err = fn(ctx); err != nil {
-				err = fmt.Errorf("%w: %s: %w: %s", ErrExecuteStage, name, err, debug.Stack())
+				err = fmt.Errorf("%w: %s: %w", ErrExecuteStage, name, err)
 				cnl(err)
 			}
 			return err
