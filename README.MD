@@ -22,14 +22,21 @@ di.Setup[*SomeType](c,
 ```
 
 #### Setup Init function
-Define function to initialize component. Usualy call `NewSomeType` here
+Define function to initialize component. Usualy call `NewSomeType` here. To call all the functions defined with `di.Init` or `di.InitE` call `Init` function on container
 ```go
+
+c := di.NewContainer()
+
 di.Setup[*SomeType](c,
     // ..
     di.Init(func(*Container) *SomeType) {
         return NewSomeType()
     }
 )
+
+err := c.Init()
+// ..
+
 ```
 
 #### Setup Init with error function
@@ -78,3 +85,5 @@ err := c.ExecStage("start", ctx)
 err := c.ExecStage("stop", ctx)
 ```
 
+#### Get component from container
+Component can be retrieved from container during initializing 
