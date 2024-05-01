@@ -3,6 +3,7 @@ package di
 import (
 	"context"
 	"fmt"
+	"runtime/debug"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -56,7 +57,7 @@ func (c *Container) ExecStage(ctx context.Context, name string) error {
 		fn := stageFn
 		eg.Go(func() (err error) {
 			if err = fn(ctx); err != nil {
-				err = fmt.Errorf("%w: %s: %w", ErrExecuteStage, name, err)
+				err = fmt.Errorf("%w: %s: %w: %s", ErrExecuteStage, name, err, debug.Stack())
 				cnl(err)
 			}
 			return err
