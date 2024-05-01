@@ -32,6 +32,22 @@ di.Setup[*SomeType](c,
 )
 ```
 
+#### Setup Init with error function
+Define function to initialize component that may return error
+```go
+
+func NewSomeType() (*SomeType, error) {
+    // ..
+}
+
+di.Setup[*SomeType](c,
+    // ..
+    di.InitE(func(*Container) (*SomeType, error)) {
+        return NewSomeType()
+    }
+)
+```
+
 #### Setup Name
 Define component name. Name may be used with `di.Get/di.GetE`
 ```go
@@ -42,7 +58,7 @@ di.Setup[*SomeType](c,
 ```
 
 #### Setup Stage
-Define function that will be executed when component executing some stage. Can be used to open/close connections, start/stop background workers, fill caches before app ready to work
+Define function that will be executed when component executing some stage. Can be used to open/close connections, start/stop background workers, fill caches before app ready to work. To execute stage functions use `ExecStage`. Stage functions will be run in parallel
 ```go
 c := NewContainer()
 
