@@ -131,7 +131,12 @@ c := di.NewContainer()
 // ..
 err := c.Init()
 // ..
-err = c.ExecStage("mystage")
+
+err = c.ExecStage("start")
+// ..
+
+err = c.ExecStage("stop")
+// ..
 ```
 
 ## Setup and Initialization
