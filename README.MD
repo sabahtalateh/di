@@ -44,6 +44,8 @@ di.Setup[*SomeType](c,
 #### Setup Stage
 Define function that will be executed when component executing some stage. Can be used to open/close connections, start/stop background workers, fill caches before app ready to work
 ```go
+c := NewContainer()
+
 di.Setup[*SomeType](c,
     // ..
     di.Stage("start", func(ctx context.Context, db *DB) error {
@@ -53,4 +55,10 @@ di.Setup[*SomeType](c,
         return db.Close(ctx)
     }),
 )
+
+// ..
+err := c.ExecStage("start", ctx)
+// ..
+err := c.ExecStage("stop", ctx)
 ```
+
