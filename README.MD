@@ -86,7 +86,7 @@ err := c.ExecStage("stop", ctx)
 ```
 
 #### Get component from container
-Component can be retrieved from container during initialization or after it. To get component during initialization use `di.Get`, if panic occures while initialization it will be captured within `Init` function
+Component can be retrieved from container during initialization or after it. To get component during initialization use `di.Get`, if component will not be found and panic occures while initialization it will be captured within `Init` function
 
 ```go
 
