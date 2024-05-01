@@ -114,3 +114,6 @@ someService, err := di.GetE[*SomeType](c)
 someService.DoWork()
 
 ```
+
+## Setup and Initialization
+Call of `di.Setup` adds component init function to internal map. Order of `di.Setup` calls does not matter, all the init function will be called on container init stage. If component not initialized yet, it's init function will be called. If component init function has `di.Get` function inside, component used with this `di.Get` will be initialized too (if not yet) and will not be initialized again
