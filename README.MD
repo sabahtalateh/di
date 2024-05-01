@@ -26,15 +26,31 @@ Define function to initialize component. Usualy call `NewSomeType` here
 ```go
 di.Setup[*SomeType](c,
     // ..
-    di.Init(func(*Container) *SomeType)
+    di.Init(func(*Container) *SomeType) {
+        return NewSomeType()
+    }
 )
 ```
 
-#### Setup Name function
+#### Setup Name
 Define component name. Name may be used with `di.Get/di.GetE`
 ```go
 di.Setup[*SomeType](c,
     di.Name("SomeName"),
     // ..
 )
+```
 
+#### Setup Stage
+Define function that will be executed when component executing some stage. Can be used to open/close connections, start/stop background workers, fill caches before app ready to work
+```go
+di.Setup[*SomeType](c,
+    // ..
+    di.Stage("start", func(ctx context.Context, db *DB) error {
+        return db.Open(ctx)
+    }),
+    di.Stage("stop", func(ctx context.Context, db *DB) error {
+        return db.Close(ctx)
+    }),
+)
+```
