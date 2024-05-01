@@ -3,7 +3,6 @@ package di
 import (
 	"context"
 	"fmt"
-	"runtime/debug"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -22,11 +21,7 @@ func stageFn[T any](c *Container, coord coordinate, fn func(context.Context, T) 
 			return nil
 		}
 
-		err := fn(ctx, t)
-		if err != nil {
-			err = fmt.Errorf("%w: %s", err, debug.Stack())
-		}
-		return err
+		return fn(ctx, t)
 	}
 }
 
