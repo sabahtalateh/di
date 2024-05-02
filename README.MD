@@ -24,7 +24,7 @@ err := di.Setup[*A](c,
 )
 
 err := di.Setup[*B](c, 
-    di.Init(func(*Container) *B) {
+    di.Init(func(c *Container) *B) {
         return NewB(di.Get[*A](c))
     }
 )
