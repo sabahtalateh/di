@@ -115,8 +115,8 @@ err := di.Setup[*SomeType](c,
     // ..
     di.InitE(func(c *Container) (*SomeType, error)) {
         return NewSomeType(
-            di.Get[config.AppConfig](c),
-            di.Get[*SomeOtherType](c, di.Name("SomeOtherType")),
+            di.Get[config.AppConfig](c), // <--
+            di.Get[*SomeOtherType](c, di.Name("SomeOtherType")), // <--
         )
     }
 )
@@ -128,7 +128,7 @@ err = c.Init()
 err = c.Stage("start", ctx)
 // ..
 
-someService, err := di.GetE[*SomeType](c)
+someService, err := di.GetE[*SomeType](c) // <--
 someService.DoWork()
 ```
 
