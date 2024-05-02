@@ -13,7 +13,9 @@ var (
 	ErrInitSet        = fmt.Errorf("init function set")
 	ErrInitNotSet     = fmt.Errorf("init function not set")
 	ErrStageSet       = fmt.Errorf("stage set")
+	ErrStageNotSet    = fmt.Errorf("stage not set")
 	ErrExecuteStage   = fmt.Errorf("execute stage")
+	ErrDisordered     = fmt.Errorf("disordered setup")
 	ErrNotFound       = fmt.Errorf("not found")
 
 	recoverableErrs = []error{
@@ -24,7 +26,9 @@ var (
 		ErrInitSet,
 		ErrInitNotSet,
 		ErrStageSet,
+		ErrStageNotSet,
 		ErrExecuteStage,
+		ErrDisordered,
 		ErrNotFound,
 	}
 )

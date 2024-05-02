@@ -11,9 +11,10 @@ type setupTestType2 struct{}
 
 func Test_Setup(t *testing.T) {
 	tests := []struct {
-		name         string
-		setup        func() (*Container, error)
-		wantSetupErr error
+		name            string
+		setup           func() (*Container, error)
+		wantSetupErr    error
+		wantErrContains []string
 	}{
 		{
 			name: "error no init",
@@ -25,7 +26,25 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrInitNotSet,
+			wantSetupErr:    ErrInitNotSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+		},
+		{
+			name: "error init function is nil",
+			setup: func() (*Container, error) {
+				c := NewContainer()
+				err := Setup[initTestType](c,
+					InitE[initTestType](nil),
+				)
+
+				if err != nil {
+					return nil, err
+				}
+
+				return c, nil
+			},
+			wantSetupErr:    ErrInitNotSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error init set 1",
@@ -40,7 +59,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrInitSet,
+			wantSetupErr:    ErrInitSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error init set 2",
@@ -55,7 +75,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrInitSet,
+			wantSetupErr:    ErrInitSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error init set 3",
@@ -70,7 +91,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrInitSet,
+			wantSetupErr:    ErrInitSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error init set 4",
@@ -85,7 +107,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrInitSet,
+			wantSetupErr:    ErrInitSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error name set 1",
@@ -101,7 +124,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrNameSet,
+			wantSetupErr:    ErrNameSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error name set 2",
@@ -117,7 +141,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrNameSet,
+			wantSetupErr:    ErrNameSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error name set 3",
@@ -133,7 +158,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrNameSet,
+			wantSetupErr:    ErrNameSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error name set 4",
@@ -149,7 +175,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrNameSet,
+			wantSetupErr:    ErrNameSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error same name set",
@@ -165,7 +192,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrNameSet,
+			wantSetupErr:    ErrNameSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error component set",
@@ -190,7 +218,24 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrComponentSet,
+			wantSetupErr:    ErrComponentSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+		},
+		{
+			name: "error stage function not set",
+			setup: func() (*Container, error) {
+				c := NewContainer()
+				err := Setup[*setupTestType](c,
+					Init(func(c *Container) *setupTestType { return new(setupTestType) }),
+					Stage[*setupTestType]("stage", nil),
+				)
+				if err != nil {
+					return nil, err
+				}
+				return c, nil
+			},
+			wantSetupErr:    ErrStageNotSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error type mismatch",
@@ -204,7 +249,8 @@ func Test_Setup(t *testing.T) {
 				}
 				return c, nil
 			},
-			wantSetupErr: ErrInitNotSet,
+			wantSetupErr:    ErrInitNotSet,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "error setup after init",
@@ -225,7 +271,8 @@ func Test_Setup(t *testing.T) {
 
 				return c, nil
 			},
-			wantSetupErr: ErrInitialized,
+			wantSetupErr:    ErrInitialized,
+			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
 		},
 		{
 			name: "ok 1",
@@ -260,6 +307,9 @@ func Test_Setup(t *testing.T) {
 			_, err := tt.setup()
 			if tt.wantSetupErr != nil {
 				require.ErrorIs(t, err, tt.wantSetupErr)
+				for _, str := range tt.wantErrContains {
+					require.Contains(t, err.Error(), str)
+				}
 				return
 			}
 			require.NoError(t, err)

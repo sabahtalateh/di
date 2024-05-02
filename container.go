@@ -2,6 +2,7 @@ package di
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"sync"
 )
@@ -15,11 +16,12 @@ type coordinate struct {
 	name  string
 }
 
-func (c *coordinate) prettyName() string {
-	if c.name == "" {
-		return "(Unnamed)"
+func (c coordinate) String() string {
+	name := c.name
+	if name == "" {
+		name = "(Unnamed)"
 	}
-	return c.name
+	return fmt.Sprintf("(%s, %s)", c.type_, name)
 }
 
 type component struct {
@@ -35,6 +37,7 @@ type Container struct {
 	initializing bool
 	initialized  bool
 
+	initOrder  []coordinate
 	components map[coordinate]component
 	stages     map[string][]func(context.Context) error
 }

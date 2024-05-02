@@ -16,12 +16,13 @@ type initTestType2 struct {
 
 func Test_Init(t *testing.T) {
 	tests := []struct {
-		name        string
-		setup       func() (*Container, error)
-		wantInitErr error
+		name            string
+		setup           func() (*Container, error)
+		wantInitErr     error
+		wantErrContains []string
 	}{
 		{
-			name: "error get component while initializing",
+			name: "error get component component which is not set",
 			setup: func() (*Container, error) {
 				c := NewContainer()
 				err := Setup[initTestType2](c,
@@ -40,15 +41,23 @@ func Test_Init(t *testing.T) {
 			wantInitErr: ErrNotFound,
 		},
 		{
-			name: "error call setup from init",
+			name: "error disordered setup",
 			setup: func() (*Container, error) {
 				c := NewContainer()
-				err := Setup[initTestType](c,
-					InitE(func(c *Container) (initTestType, error) {
-						if err := Setup[initTestType](c); err != nil {
-							return initTestType{}, err
+				err := Setup[initTestType2](c,
+					Init(func(c *Container) initTestType2 {
+						return initTestType2{
+							itt: Get[initTestType](c),
 						}
-						return initTestType{}, nil
+					}),
+				)
+				if err != nil {
+					return nil, err
+				}
+
+				err = Setup[initTestType](c,
+					Init(func(c *Container) initTestType {
+						return initTestType{}
 					}),
 				)
 				if err != nil {
@@ -57,10 +66,13 @@ func Test_Init(t *testing.T) {
 
 				return c, nil
 			},
-			wantInitErr: ErrInitialized,
+			wantInitErr: ErrDisordered,
+			wantErrContains: []string{
+				"(di.initTestType, (Unnamed)) must be set before parent component",
+			},
 		},
 		{
-			name: "init after init",
+			name: "error init after init",
 			setup: func() (*Container, error) {
 				c := NewContainer()
 				err := c.Init()
@@ -110,6 +122,9 @@ func Test_Init(t *testing.T) {
 			err = c.Init()
 			if tt.wantInitErr != nil {
 				require.ErrorIs(t, err, tt.wantInitErr)
+				for _, str := range tt.wantErrContains {
+					require.Contains(t, err.Error(), str)
+				}
 				return
 			}
 

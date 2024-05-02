@@ -5,30 +5,6 @@ import (
 	"runtime/debug"
 )
 
-func (c *Container) initComponent(coord coordinate) (any, error) {
-	comp, ok := c.components[coord]
-	if !ok {
-		return nil, fmt.Errorf("%w: (%s, %s)", ErrNotFound, coord.type_, coord.prettyName())
-	}
-
-	if comp.initFn == nil {
-		return comp.val, nil
-	}
-
-	var (
-		err error
-	)
-	comp.val, err = comp.initFn(c)
-	if err != nil {
-		return nil, err
-	}
-	comp.initFn = nil
-
-	c.components[coord] = comp
-
-	return comp.val, nil
-}
-
 func (c *Container) enterInit() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -71,10 +47,19 @@ func (c *Container) Init() (err error) {
 		return err
 	}
 
-	for coord := range c.components {
-		if _, err = c.initComponent(coord); err != nil {
+	for _, coord := range c.initOrder {
+		comp, ok := c.components[coord]
+		if !ok {
+			continue
+		}
+
+		comp.val, err = comp.initFn(c)
+		if err != nil {
 			return err
 		}
+		comp.initFn = nil
+
+		c.components[coord] = comp
 	}
 
 	c.exitInit()

@@ -1,7 +1,6 @@
 package di
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 )
@@ -62,15 +61,16 @@ func GetE[T any](c *Container, opts ...getOpt[T]) (T, error) {
 		name:  name,
 	}
 
-	val, err := c.initComponent(coord)
-	if errors.Is(err, ErrNotFound) {
-		return t, notFoundHint[T](err, c, coord.name)
-	}
-	if err != nil {
-		return t, err
+	comp, ok := c.components[coord]
+	if !ok {
+		return t, errNotFoundWithHint[T](c, coord.name)
 	}
 
-	t, ok := val.(T)
+	if comp.initFn != nil {
+		return t, fmt.Errorf("%w: %s must be set before parent component", ErrDisordered, coord)
+	}
+
+	t, ok = comp.val.(T)
 	if !ok {
 		return t, ErrNotFound
 	}
@@ -78,7 +78,7 @@ func GetE[T any](c *Container, opts ...getOpt[T]) (T, error) {
 	return t, nil
 }
 
-func notFoundHint[T any](err error, c *Container, name string) error {
+func errNotFoundWithHint[T any](c *Container, name string) error {
 	tryCoord := coordinate{name: name}
 
 	var t T
@@ -92,8 +92,8 @@ func notFoundHint[T any](err error, c *Container, name string) error {
 	}
 
 	if _, ok := c.components[tryCoord]; ok {
-		return fmt.Errorf("%w: found component (%s, %s)", err, tryCoord.type_, tryCoord.prettyName())
+		return fmt.Errorf("%w: found component %s", ErrNotFound, tryCoord)
 	}
 
-	return err
+	return ErrNotFound
 }
