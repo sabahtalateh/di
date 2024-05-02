@@ -27,7 +27,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitNotSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error init function is nil",
@@ -44,7 +44,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitNotSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error init set 1",
@@ -60,7 +60,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error init set 2",
@@ -76,7 +76,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error init set 3",
@@ -92,7 +92,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error init set 4",
@@ -108,7 +108,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error name set 1",
@@ -125,7 +125,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrNameSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error name set 2",
@@ -142,7 +142,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrNameSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error name set 3",
@@ -159,7 +159,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrNameSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error name set 4",
@@ -176,7 +176,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrNameSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error same name set",
@@ -193,7 +193,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrNameSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error component set",
@@ -219,7 +219,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrComponentSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error stage function not set",
@@ -235,7 +235,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrStageNotSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error type mismatch",
@@ -250,7 +250,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitNotSet,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error setup after init",
@@ -272,7 +272,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitialized,
-			wantErrContains: []string{"github.com/sabahtalateh/di/setup_test.go"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "ok 1",
