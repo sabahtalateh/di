@@ -147,7 +147,7 @@ err = di.Setup[*B](
     // ..
 )
 
-err := c.Init()
+err = c.Init()
 // ..
 ```
 
