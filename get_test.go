@@ -255,5 +255,5 @@ func Test_get_stack_trace(t *testing.T) {
 
 	err = c.Init()
 	// test err contains stack trace with file path
-	require.Contains(t, err.Error(), "github.com/sabahtalateh/di/get_test.go:")
+	require.Contains(t, err.Error(), "di/get_test.go:")
 }
