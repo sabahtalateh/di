@@ -149,7 +149,15 @@ Execute stage defined with `Init` function with `ExecStage`
 
 ```go
 c := di.NewContainer()
-// ..
+
+err := di.Setup[*A](
+    // ..
+)
+
+err = di.Setup[*B](
+    // ..
+)
+
 err := c.Init()
 // ..
 
