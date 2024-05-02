@@ -138,7 +138,15 @@ After all the components set call `Init`. It will call all the init functions in
 
 ```go
 c := di.NewContainer()
-// ..
+
+err := di.Setup[*A](
+    // ..
+)
+
+err = di.Setup[*B](
+    // ..
+)
+
 err := c.Init()
 // ..
 ```
@@ -149,15 +157,7 @@ Execute stage defined with `Init` function with `ExecStage`
 
 ```go
 c := di.NewContainer()
-
-err := di.Setup[*A](
-    // ..
-)
-
-err = di.Setup[*B](
-    // ..
-)
-
+// ..
 err := c.Init()
 // ..
 
