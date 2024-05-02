@@ -32,7 +32,7 @@ err := di.Setup[*B](c,
 
 #### Setup Init function
 
-Define function to initialize component. Usualy call `NewSomeType` here. To call all the functions defined with `di.Init` or `di.InitE` call `Init` function on container. Functions will be called in order
+Define function to initialize component. Usualy call `NewSomeType` here. To call all the functions defined with `di.Init` or `di.InitE` call `Init` function on container. Init functions will be called in order
 ```go
 
 c := di.NewContainer()
