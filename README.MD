@@ -30,7 +30,7 @@ err := di.Setup[*B](c,
 )
 ```
 
-#### Setup Init function
+#### Init Function
 
 Define function to initialize component. Usualy call `NewSomeType` here. To call all the functions defined with `di.Init` or `di.InitE` call `Init` function on container. Init functions will be called in order
 ```go
@@ -49,7 +49,7 @@ err := c.Init()
 
 ```
 
-#### Setup Init with error function
+#### Init Function returning error
 
 Define function to initialize component that may return error
 
@@ -67,7 +67,7 @@ err := di.Setup[*SomeType](c,
 )
 ```
 
-#### Setup Name
+#### Name
 
 Define component name. Name may be used with `di.Get/di.GetE`
 
@@ -78,32 +78,35 @@ err := di.Setup[*SomeType](c,
 )
 ```
 
-#### Setup Stage
+#### Stage
 
-Define function that will be executed when application expiriencing some stage. Can be used to open/close connections, start/stop background workers, fill caches before app started/stopped. To execute stage functions use `ExecStage`. Functions defined on same stage will be executed in parallel
+Define function that will be executed when application expiriencing some stage of it's lifecycle. Can be used to open/close connections, start/stop background workers, fill caches before app started/stopped. To execute stage functions call `ExecStage`. Functions defined on same stage will be executed in parallel
 
 ```go
 c := NewContainer()
 
-err := di.Setup[*SomeType](c,
-    // ..
-    di.Stage("start", func(ctx context.Context, db *DB) error {
+err := di.Setup[*Database](c,
+    di.Init(
+        // ..
+    ),
+    di.Stage("start", func(ctx context.Context, db *Database) error {
         return db.Open(ctx)
     }),
-    di.Stage("stop", func(ctx context.Context, db *DB) error {
+    di.Stage("stop", func(ctx context.Context, db *Database) error {
         return db.Close(ctx)
     }),
 )
 
 // ..
 err := c.ExecStage("start", ctx)
+
 // ..
 err := c.ExecStage("stop", ctx)
 ```
 
-#### Get component from container
+### Get component from container
 
-Component can be retrieved from container during initialization and after it. To get component during initialization use `di.Get`, if component not found panic occures while initialization that will be captured within `Init` function. To get component after initialization use `di.GetE`
+Component can be retrieved from container during initialization and after it. To get component during initialization use `di.Get` within `di.Init`, if component not found panic occures while initialization that will be captured within `Init` function. To get component after initialization use `di.GetE`
 
 ```go
 c := NewContainer()
@@ -126,13 +129,12 @@ err = c.Stage("start", ctx)
 // ..
 
 someService, err := di.GetE[*SomeType](c)
-// ..
 someService.DoWork()
 ```
 
 ### Init Container
 
-After all the components set call `Init`. It will call all the components init functions in order. If component `A` depends on component `B` it should be setup in corresponding order
+After all the components set call `Init`. It will call all the init functions in order corresponding `di.Setup` were called. If component `A` depends on component `B` it should be setup in corresponding order
 
 ```go
 c := di.NewContainer()
@@ -142,7 +144,9 @@ err := c.Init()
 ```
 
 ### Execute Stage
+
 Execute stage defined with `Init` function with `ExecStage`
+
 ```go
 c := di.NewContainer()
 // ..
@@ -157,4 +161,5 @@ err = c.ExecStage("stop")
 ```
 
 ## Setup and Initialization
-Call of `di.Setup` adds component init function to internal initialization list. Order of `di.Setup` calls does matters, all the init function will be called on container init stage in order corresponding setup functions were called
+
+Call for `di.Setup` adds component init function to internal initialization list. Order of `di.Setup` calls **does matters**, all the init function will be called on container init stage in order corresponding setup functions were called
