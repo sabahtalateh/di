@@ -8,6 +8,15 @@ go get github.com/sabahtalateh/di
 
 See example service at [https://github.com/sabahtalateh/diexample](https://github.com/sabahtalateh/diexample)
 
+## Overview
+
+### Lifecycle
+
+DI lifecycle phases
+1. Setup components with `di.Setup(..)`
+2. Init container. This phase call all the init functions were added on setup phase. `di.Setup` call after init will return error
+3. User defined stages. Stages can be defined with `di.Setup(di.Stage(..))`. User stages execute by name. User stages can be executed only after init phase otherwise error returns
+
 ## API
 
 List of function you can use to interact with container
