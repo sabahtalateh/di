@@ -27,7 +27,7 @@ func Test_Setup(t *testing.T) {
 				return c, nil
 			},
 			wantSetupErr:    ErrInitNotSet,
-			wantErrContains: []string{"TEST"},
+			wantErrContains: []string{"di/setup_test.go"},
 		},
 		{
 			name: "error init function is nil",
