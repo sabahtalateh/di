@@ -1,4 +1,4 @@
-![example workflow](https://github.com/sabahtalateh/di/actions/workflows/go.yml/badge.svg)
+![workflow](https://github.com/sabahtalateh/di/actions/workflows/go.yml/badge.svg)
 
 # DI Container
 
